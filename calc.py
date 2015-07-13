@@ -113,3 +113,5 @@ class Total:
         for lph in self.point_holders:
             results.append(sum(lph - rph for rph in self.point_holders))
         return results
+
+__all__ = ('TOTAL_RATIO', 'POINTS_RATIO', 'PointHolder', 'Total')

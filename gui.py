@@ -29,6 +29,7 @@ class PointHolderProxy:
         self.points = tk.IntVar()
         self.whists = [tk.IntVar(0) for i in range(3)]
 
+        self.results = tk.StringVar()
 
     def as_point_holder(self):
         return PointHolder(self.playerno,
@@ -51,10 +52,12 @@ class Application:
 
         self.button_group()
         self.score_body()
+        self.results_visible = False
 
     def score_body(self):
         self.player_frames = []
         self.ph_proxies = []
+        self.results_frames = []
 
         for i in range(1,5):
             lf = ttk.LabelFrame(self.top, text="Player %s" % i)
@@ -67,7 +70,6 @@ class Application:
             fine.pack(side="right")
 
             sep1 = ttk.Separator(lf)
-
 
             pointsframe = ttk.Frame(lf)
             pointslabel = ttk.Label(pointsframe, text="Пуля")
@@ -91,6 +93,11 @@ class Application:
                 el.pack(fill="x", pady=2, padx=3)
 
             # prepare results
+            resultsframe = ttk.Frame(lf)
+            resultslabel = ttk.Label(resultsframe, anchor="center",
+                                     textvariable=ph.results)
+            resultslabel.pack(fill="x", pady=20, padx=3)
+            self.results_frames.append(resultsframe)
 
             self.player_frames.append(lf)
             self.ph_proxies.append(ph)
@@ -122,11 +129,12 @@ class Application:
     def on_calculate(self):
         score = Total([ph.as_point_holder() for ph in self.ph_proxies])
         results = score.calculate()
-        for i, lf in enumerate(self.player_frames):
-            sep = ttk.Separator(lf)
-            sep.pack(fill="x", pady=2)
-            resultslabel = ttk.Label(lf, text="Результат: %s" % results[i])
-            resultslabel.pack(after=sep, fill="x", pady=20, padx=3)
+        for i, ph in enumerate(self.ph_proxies):
+            ph.results.set("Результат: %s" % results[i])
+        if not self.results_visible:
+            self.results_visible = True
+            for rf in self.results_frames:
+                rf.pack(fill="x")
 
 
 

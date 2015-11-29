@@ -16,13 +16,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from decimal import Decimal, getcontext
+from decimal import Decimal
 
-TOTAL_RATIO = None  # may be 1, 2, 3, 4 or None meaning = players_count
-POINTS_RATIO = FINE_RATIO = Decimal(10)  # may be 20, 10
+total_ratio_list = [None, 1, 2, 3, 4]
+TOTAL_RATIO = total_ratio_list[0]
+# may be 1, 2, 3, 4 or None meaning = players_count
+fine_points_ratio_list = [(Decimal(10), Decimal(10)),
+                          (Decimal(10), Decimal(20))]
 
-
-getcontext().prec = 2
+FINE_RATIO, POINTS_RATIO = fine_points_ratio_list[0]  # may be 20, 10
 
 
 class DecimalDescriptor:
@@ -42,6 +44,7 @@ class DecimalDescriptor:
 
 
 class PointHolder:
+
     fine = DecimalDescriptor()
     points = DecimalDescriptor()
     applied_fine = DecimalDescriptor()
@@ -111,7 +114,7 @@ class Total:
 
         results = []
         for lph in self.point_holders:
-            results.append(sum(lph - rph for rph in self.point_holders))
+            results.append(round(sum(lph - rph for rph in self.point_holders)))
         return results
 
 __all__ = ('TOTAL_RATIO', 'POINTS_RATIO', 'PointHolder', 'Total')

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.4
+#!/usr/bin/env python3
 # vi:fileencoding=utf-8
 from __future__ import absolute_import
 from __future__ import division
